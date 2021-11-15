@@ -18,7 +18,7 @@ if (isset($listaProductos[0])) {
 
     if ($exito) {
         $message = "Producto cargado correctamente";
-        header('Location: ../cliente/listaProductos.php?message=' . urlencode($message));
+        header('Location: ../deposito/administrarProductos.php?message=' . urlencode($message));
         exit;
     } else {
         $message = "Error en la carga del producto";

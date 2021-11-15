@@ -60,22 +60,45 @@ $sesion = new session();
                             <li><a class="dropdown-item" href="../cliente/relojes.php">Relojes</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar productos</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="../deposito/administrarProductos.php">Administrar</a></li>
-                            <li><a class="dropdown-item" href="../deposito/cargarProducto.php">Cargar Nuevo Producto</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar usuarios</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="../admin/administrarUsuarios.php">Administrar</a></li>
-                            <li><a class="dropdown-item" href="../admin/cargarUsuario.php">Cargar Nuevo Usuario</a></li>
-                        </ul>
-                    </li>
-                </ul>
 
+                    <?php
+                    if ($sesion->activa()) {
+                        $usNombre = $sesion->getUsnombre();
+                        $abmUsuario = new abmusuario();
+                        $listaUs = $abmUsuario->buscar(['usnombre' => $usNombre]);
+                        $idUsuario = $listaUs[0]->getIdusuario();
+                        $abmUsuarioRol = new abmusuariorol();
+                        $listaUsRol = $abmUsuarioRol->buscar(['idusuario' => $idUsuario]);
+                        if ($listaUsRol[0]->getObjRol()[0]->getIdrol() == 2) {
+                    ?>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar productos</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li><a class="dropdown-item" href="../deposito/administrarProductos.php">Administrar</a></li>
+                                    <li><a class="dropdown-item" href="../deposito/cargarProducto.php">Cargar Nuevo Producto</a></li>
+                                </ul>
+                            </li>
+
+                        <?php
+                        }
+                        if ($listaUsRol[0]->getObjRol()[0]->getIdrol() == 3) {
+                        ?>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar usuarios</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li><a class="dropdown-item" href="../admin/administrarUsuarios.php">Administrar</a></li>
+                                    <li><a class="dropdown-item" href="../admin/cargarUsuario.php">Cargar Nuevo Usuario</a></li>
+                                </ul>
+                            </li>
+
+                    <?php
+                        }
+                    }
+                    ?>
+
+                </ul>
                 <ul class="navbar-nav d-flex">
                     <!-- Icon carrito -->
                     <li class="nav-item">
@@ -109,11 +132,9 @@ $sesion = new session();
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown-Usuario">
-                                <a class="dropdown-item" href="../cliente/perfil.php"><span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;Perfil</a>
+                                <a class="dropdown-item" href="../cliente/perfil.php"><span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;<?php echo $sesion->getUsnombre() ?></a>
                                 <a class="dropdown-item" href="../cliente/configuracion.php"><span class="fas fa-cog fa-fw " aria-hidden="true" title="Configuración"></span>&nbsp;Configuración</a>
-
                                 <div class="dropdown-divider"></div>
-
                                 <a class="dropdown-item logout" href="../actions/actionLogout.php"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true" title="Cerrar sesión"></span>&nbsp;Cerrar sesión</a>
                             </div>
                         </li>

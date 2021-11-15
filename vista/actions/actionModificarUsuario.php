@@ -9,11 +9,16 @@ $abmUsuario = new abmUsuario();
 $lista = $abmUsuario->buscar($datosBusqueda);
 
 if (isset($lista)) {
-    $exito = $abmUsuario->modificacion($datos);
+    $exitoModificacionUsuario = $abmUsuario->modificacion($datos);
     $abmUsuarioRol = new abmusuariorol();
-    $exito = $abmUsuarioRol->modificacion($datos);
-    $exito ? header('Location: ../admin/administrarUsuarios.php?message=' . urlencode("Usuario modificado")) : header('Location: ../admin/administrarUsuarios.php?message=' . urlencode("Error en la modificacion"));
-    exit;
+    $exitoModificacionUsuarioRol = $abmUsuarioRol->modificacion($datos);
+    if ($exitoModificacionUsuario || $exitoModificacionUsuarioRol) {
+        header('Location: ../admin/administrarUsuarios.php?message=' . urlencode("Usuario modificado correctamente"));
+        exit;
+    } else {
+        header('Location: ../admin/formularioModificarUsuario.php?message=' . urlencode("Error en la modificación"));
+        exit;
+    }
 } else {
     $message = "Usuario no encontrado en la base de datos";
     header('Location: ../admin/administrarUsuarios.php?message=' . urlencode($message));

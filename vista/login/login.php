@@ -23,9 +23,6 @@ include_once '../estructuras/cabecera.php';
             </div>
         </div>
     </form>
-    <div class="text-center">
-        <p class="mb-0 text-muted">¿No tenés cuenta? <a href="registrar.php">¡Registrate!</a></p>
-    </div>
 </div>
 
 <?php
