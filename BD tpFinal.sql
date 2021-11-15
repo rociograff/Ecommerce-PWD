@@ -172,9 +172,9 @@ CREATE TABLE `rol` (
 INSERT INTO
     `rol` (`idrol`, `rodescripcion`)
 VALUES
-    (1, 'Cliente'),
-    (2, 'Deposito'),
-    (3, 'Admin');
+    (1, 'cliente'),
+    (2, 'deposito'),
+    (3, 'admin');
 
 -- --------------------------------------------------------
 --
