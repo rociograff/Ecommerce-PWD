@@ -4,6 +4,7 @@
 <?php
 include_once '../../configuracion.php';
 $sesion = new session();
+$activa = $sesion->activa();
 ?>
 
 <head>
@@ -62,38 +63,62 @@ $sesion = new session();
                     </li>
 
                     <?php
-                    if ($sesion->activa()) {
-                        $usNombre = $sesion->getUsnombre();
-                        $abmUsuario = new abmusuario();
-                        $listaUs = $abmUsuario->buscar(['usnombre' => $usNombre]);
-                        $idUsuario = $listaUs[0]->getIdusuario();
+                    if ($activa) {
+                        $idUsuario = $sesion->getIdusuario();
                         $abmUsuarioRol = new abmusuariorol();
                         $listaUsRol = $abmUsuarioRol->buscar(['idusuario' => $idUsuario]);
-                        if ($listaUsRol[0]->getObjRol()[0]->getIdrol() == 2) {
+                        // print_r($listaUsRol[0]->getObjRol());
+                        $abmMenuRol = new abmmenurol();
+                        $idRol = $listaUsRol[0]->getObjRol()->getIdrol();
+                        $listaMenuRol = $abmMenuRol->buscar(['idrol' => $idRol]);
+                        // print_r($listaMenuRol);
+                        if (count($listaMenuRol) > 0) {
+                            $abmMenu = new abmmenu();
+                            $idMenu = $listaMenuRol[0]->getObjMenu()->getIdmenu();
+                            $listaMenu = $abmMenu->buscar(['idmenu' => $idMenu]);
+                            // print_r($listaMenu);
+                            if (count($listaMenu) > 0) {
+                                $idPadre = $listaMenu[0]->getIdmenu();
+                                $listaSubMenu = $abmMenu->buscar(['idpadre' => $idPadre]);
+                                // print_r($listaSubMenu);
+                            }
+                        }
+                        foreach ($listaMenu as $menu) {
+                            if ($menu->getMedeshabilitado() == '0000-00-00 00:00:00') {
                     ?>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar productos</a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="../deposito/administrarProductos.php">Administrar</a></li>
-                                    <li><a class="dropdown-item" href="../deposito/cargarProducto.php">Cargar Nuevo Producto</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $menu->getMenombre() ?></a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-                        <?php
-                        }
-                        if ($listaUsRol[0]->getObjRol()[0]->getIdrol() == 3) {
-                        ?>
+                                        <?php
+                                        foreach ($listaSubMenu as $subMenu) {
+                                            if ($subMenu->getMedeshabilitado() == '0000-00-00 00:00:00') {
+                                                switch ($idRol) {
+                                                    case '3':
+                                                        $enlace = "../admin/";
+                                                        break;
+                                                    case '2':
+                                                        $enlace = "../deposito/";
+                                                        break;
+                                                    case '1':
+                                                        $enlace = "../cliente/";
+                                                        break;
+                                                }
+                                        ?>
 
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrar usuarios</a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="../admin/administrarUsuarios.php">Administrar</a></li>
-                                    <li><a class="dropdown-item" href="../admin/cargarUsuario.php">Cargar Nuevo Usuario</a></li>
-                                </ul>
-                            </li>
+                                                <li><a class="dropdown-item" href="<?php echo $enlace . $subMenu->getMedescripcion() . ".php"; ?>"><?php echo $subMenu->getMenombre() ?></a></li>
+
+                                        <?php
+                                            }
+                                        }
+                                        ?>
+
+                                    </ul>
+                                </li>
 
                     <?php
+                            }
                         }
                     }
                     ?>
@@ -109,7 +134,7 @@ $sesion = new session();
                     <!-- Icon visitante -->
 
                     <?php
-                    if (!$sesion->activa()) {
+                    if (!$activa) {
                     ?>
 
                         <li class="nav-item dropdown">
@@ -132,8 +157,8 @@ $sesion = new session();
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown-Usuario">
-                                <a class="dropdown-item" href="../cliente/perfil.php"><span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;<?php echo $sesion->getUsnombre() ?></a>
-                                <a class="dropdown-item" href="../cliente/configuracion.php"><span class="fas fa-cog fa-fw " aria-hidden="true" title="Configuración"></span>&nbsp;Configuración</a>
+                                <a class="dropdown-item" href="../pages/perfil.php"><span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;<?php echo $sesion->getUsnombre() ?></a>
+                                <a class="dropdown-item" href="../pages/configuracion.php"><span class="fas fa-cog fa-fw " aria-hidden="true" title="Configuración"></span>&nbsp;Configuración</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item logout" href="../actions/actionLogout.php"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true" title="Cerrar sesión"></span>&nbsp;Cerrar sesión</a>
                             </div>
