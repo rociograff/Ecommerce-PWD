@@ -7,9 +7,9 @@ $abmMenu = new abmmenu();
 $modificado = $abmMenu->modificacion($datos);
 
 if ($modificado) {
-    $message = "Menu modificado";
+    $message = "Menú modificado";
     header('Location: ../admin/administrarMenus.php?Message=' . urlencode($message));
 } else {
-    $message = "Error al modificar menu";
+    $message = "Error al modificar menú";
     header('Location: ../admin/administrarMenus.php?Message=' . urlencode($message));
 }

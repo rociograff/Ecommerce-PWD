@@ -12,7 +12,7 @@ if ($menuDeshabilitado) {
     $message = "Menú deshabilitado exitosamente";
     header('Location: ../admin/administrarMenus.php?Message=' . urlencode($message));
 } else {
-    $message = "Error al deshabilitar el menu";
+    $message = "Error al deshabilitar el menú";
     header('Location: ../admin/administrarMenus.php?Message=' . urlencode($message));
 }
 
