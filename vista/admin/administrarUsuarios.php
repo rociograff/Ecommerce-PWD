@@ -13,12 +13,34 @@ include_once '../estructuras/cabecera.php';
 
 <div class="container mt-3">
     <?php
-    $abmUsuario = new abmusuario();
-    $lista = $abmUsuario->buscar(null);
-    if (count($lista) > 0) {
+$abmUsuario = new abmusuario();
+$lista = $abmUsuario->buscar(null);
+if (count($lista) > 0) {
     ?>
 
         <h1 class="text-center">Usuarios en la Base de Datos</h1>
+
+        <?php
+if (count($datos) > 0) {
+        if (isset($datos['messageOk']) || isset($datos['messageErr'])) {
+            if (isset($datos['messageOk'])) {
+                $message = $datos['messageOk'];
+                $alert = "success";
+            } else {
+                $message = $datos['messageErr'];
+                $alert = "danger";
+            }
+            ?>
+
+            <div class='alert alert-<?php echo $alert ?> d-flex align-items-center text-center' role='alert'>
+                <i class="bi bi-exclamation-triangle-fill text-center">&nbsp;<?php echo $message ?></i>
+            </div>
+
+        <?php
+
+        }
+    }?>
+
         <table class='table mt-3'>
             <thead style="color:white;background: rgb(0,212,255);background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(194,2,160,1) 0%, rgba(139,0,142,1) 100%);">
                 <tr>
@@ -35,13 +57,13 @@ include_once '../estructuras/cabecera.php';
             </thead>
 
             <?php
-            foreach ($lista as $usuario) {
-                $id = $usuario->getIdusuario();
-                $abmUsuarioRol = new abmusuariorol();
-                $datos['idusuario'] = $id;
-                $listaUsuarioRol = $abmUsuarioRol->buscar($datos);
-                $rol = $listaUsuarioRol[0]->getObjRol()->getRodescripcion();
-            ?>
+foreach ($lista as $usuario) {
+        $id = $usuario->getIdusuario();
+        $abmUsuarioRol = new abmusuariorol();
+        $datos['idusuario'] = $id;
+        $listaUsuarioRol = $abmUsuarioRol->buscar($datos);
+        $rol = $listaUsuarioRol[0]->getObjRol()->getRodescripcion();
+        ?>
 
                 <tr>
                     <td class='text-center'><?php echo $id ?></td>
@@ -60,20 +82,20 @@ include_once '../estructuras/cabecera.php';
                             <input name='idusuario' id='idusuario' type='hidden' value=<?php echo $id ?>><button class='btn btn-warning btn-sm' type='submit'>
 
                                 <?php
-                                if ($usuario->getUsdeshabilitado() == '0000-00-00 00:00:00') {
-                                ?>
+if ($usuario->getUsdeshabilitado() == '0000-00-00 00:00:00') {
+            ?>
 
                                     <i class="bi bi-toggle-off"></i>
 
                                 <?php
-                                } else {
-                                ?>
+} else {
+            ?>
 
                                     <i class="bi bi-toggle-on"></i>
 
                                 <?php
-                                }
-                                ?>
+}
+        ?>
 
                             </button>
                         </td>
@@ -86,20 +108,20 @@ include_once '../estructuras/cabecera.php';
                 </tr>
 
             <?php
-            }
-            ?>
+}
+    ?>
 
         </table>
 
     <?php
-    } else {
+} else {
     ?>
 
         <h1 class='text-center'>No hay usuarios cargados en la base de datos</h1>
 
     <?php
-    }
-    ?>
+}
+?>
 
 </div>
 

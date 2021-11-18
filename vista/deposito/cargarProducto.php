@@ -1,7 +1,7 @@
 <?php
 include_once '../../configuracion.php';
 $sesion = new session();
-if(!$sesion->activa()) {
+if (!$sesion->activa()) {
     header('Location: ../login/login.php?message=' . urlencode("No ha iniciado sesión"));
     exit;
 }
@@ -17,13 +17,13 @@ include_once '../estructuras/cabecera.php';
                 <div class="form-floating">
                     <input class="form-control" id="idproducto" name="idproducto" type="text" placeholder="ID">
                     <label for="idproducto">ID</label>
-                </div>          
-             </div>
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="form-floating">
                     <input class="form-control" id="proprecio" name="proprecio" type="text" placeholder="Precio">
                     <label for="proprecio">Precio</label>
-                </div>           
+                </div>
             </div>
         </div>
         <div class="row">
@@ -67,7 +67,7 @@ include_once '../estructuras/cabecera.php';
                 <button class="btn" style="color: white;background: rgb(0,212,255);background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(194,2,160,1) 0%, rgba(139,0,142,1) 100%);" type="submit">Cargar</button>
             </div>
         </div>
-    </form>  
+    </form>
 </div>
 
 <?php
