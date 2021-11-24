@@ -18,10 +18,10 @@ if (!isset($lista[0])) {
         $datos['idrol'] = $datos['idpadre'];
         $exito = $abmMenuRol->alta($datos);
     }
-    $exito ? header('Location: ../admin/administrarMenus.php?messageOk=' . urlencode("Menú cargado correctamente")) : header('Location: ../admin/administrarMenus.php?messageErr=' . urlencode("Error en la carga"));
+    $exito ? header('Location: ../admin/administrarMenus.php?messageOk=' . urlencode("Menu cargado correctamente")) : header('Location: ../admin/administrarMenus.php?messageErr=' . urlencode("Error en la carga"));
     exit;
 } else {
-    $message = "El nombre de menú ya existe";
+    $message = "El nombre de menu ya existe";
     header('Location: ../admin/cargarMenu.php?messageErr=' . urlencode($message));
     exit;
 }

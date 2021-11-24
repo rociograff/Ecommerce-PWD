@@ -2,7 +2,7 @@
 include_once '../../configuracion.php';
 
 $datos = data_submitted();
-
+print_r($datos);
 $abmCompraItem = new abmcompraitem();
 $listaCI = $abmCompraItem->buscar(['idcompraitem' => $datos['idcompraitem']]);
 
