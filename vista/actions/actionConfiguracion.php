@@ -13,7 +13,7 @@ if (isset($lista)) {
     $abmUsuarioRol = new abmusuariorol();
     $exitoModificacionUsuarioRol = $abmUsuarioRol->modificacion($datos);
     if ($exitoModificacionUsuario || $exitoModificacionUsuarioRol) {
-        header('Location: ../login/configuracion.php?messageOk=' . urlencode("Usuario modificado correctamente"));
+        header('Location: ../home/index.php?messageOk=' . urlencode("Usuario modificado correctamente"));
         exit;
     } else {
         header('Location: ../login/configuracion.php?messageErr=' . urlencode("Error en la modificación"));
