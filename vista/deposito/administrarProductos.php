@@ -1,11 +1,19 @@
 <?php
 include_once '../../configuracion.php';
 $sesion = new session();
+$titulo = "Administrar Productos";
+$datos = data_submitted();
+$controlAdmin = new control_deposito();
+$valido = $controlAdmin->verificarDeposito("administrarProductos", $titulo);
+if (!$valido) {
+    header('Location: ../home/index.php?messageErr=' . urlencode("No tiene los permisos para acceder"));
+    exit;
+}
+
 if (!$sesion->activa()) {
     header('Location: ../login/login.php?message=' . urlencode("No ha iniciado sesión"));
     exit;
 }
-$titulo = "Administrar Productos";
 include_once '../estructuras/cabecera.php';
 ?>
 
@@ -17,6 +25,28 @@ include_once '../estructuras/cabecera.php';
     ?>
 
         <h1 class="text-center">Productos en la Base de Datos</h1>
+
+        <?php
+        if (count($datos) > 0) {
+            if (isset($datos['messageOk']) || isset($datos['messageErr'])) {
+                if (isset($datos['messageOk'])) {
+                    $message = $datos['messageOk'];
+                    $alert = "success";
+                } else {
+                    $message = $datos['messageErr'];
+                    $alert = "danger";
+                }
+        ?>
+
+                <div class='alert alert-<?php echo $alert ?> d-flex align-items-center col-md-4 offset-md-4 text-center' role='alert'>
+                    <i class="bi bi-exclamation-triangle-fill text-center">&nbsp;<?php echo $message ?></i>
+                </div>
+
+        <?php
+
+            }
+        } ?>
+
         <table class='table mt-3'>
             <thead style="color:white;background: rgb(0,212,255);background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(194,2,160,1) 0%, rgba(139,0,142,1) 100%);">
                 <tr>
@@ -30,7 +60,7 @@ include_once '../estructuras/cabecera.php';
                     <th scope='col' class="text-center">Deshabilitado</th>
                     <th scope='col' class="text-center">Modificar</th>
                     <th scope='col' class="text-center">Deshabilitar</th>
-                    <th scope='col' class='text-center'>Eliminar</th>
+                    <!-- <th scope='col' class='text-center'>Eliminar</th> -->
                 </tr>
             </thead>
 
@@ -76,11 +106,11 @@ include_once '../estructuras/cabecera.php';
                             </button>
                         </td>
                     </form>
-                    <form method='post' action='../actions/actionEliminarProducto.php'>
+                    <!-- <form method='post' action='../actions/actionEliminarProducto.php'>
                         <td class='text-center'>
                             <input name='idproducto' id='idproducto' type='hidden' value=<?php echo $id ?>><button class='btn btn-danger btn-sm' type='submit'><i class='bi bi-trash'></i></button>
                         </td>
-                    </form>
+                    </form> -->
                 </tr>
 
             <?php

@@ -1,10 +1,17 @@
 <?php
 include_once '../../configuracion.php';
-$sesion = new session();
-if (!$sesion->activa()) {
-    header('Location: ../login/login.php?message=' . urlencode("No ha iniciado sesión"));
-    exit;
+$datos = data_submitted();
+$valido = false;
+if (!$valido) {
+    $controlAdmin = new control_admin();
+    $valido = $controlAdmin->verificarAdmin("administrarMenus");
+    if (!$valido) {
+        header('Location: ../home/index.php?messageErr=' . urlencode("No tiene los permisos para acceder"));
+        exit;
+    }
 }
+
+
 $titulo = "Administrar Usuarios";
 include_once '../estructuras/cabecera.php';
 ?>
@@ -17,6 +24,28 @@ include_once '../estructuras/cabecera.php';
     ?>
 
         <h1 class="text-center">Menúes en la Base de Datos</h1>
+
+        <?php
+        if (count($datos) > 0) {
+            if (isset($datos['messageOk']) || isset($datos['messageErr'])) {
+                if (isset($datos['messageOk'])) {
+                    $message = $datos['messageOk'];
+                    $alert = "success";
+                } else {
+                    $message = $datos['messageErr'];
+                    $alert = "danger";
+                }
+        ?>
+
+                <div class='alert alert-<?php echo $alert ?> d-flex align-items-center text-center col-md-4 offset-md-4' role='alert'>
+                    <i class="bi bi-exclamation-triangle-fill text-center">&nbsp;<?php echo $message ?></i>
+                </div>
+
+        <?php
+
+            }
+        } ?>
+
         <table class='table mt-3'>
             <thead style="color:white;background: rgb(0,212,255);background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(194,2,160,1) 0%, rgba(139,0,142,1) 100%);">
                 <tr>
@@ -27,7 +56,6 @@ include_once '../estructuras/cabecera.php';
                     <th scope='col' class='text-center'>Deshabilitado</th>
                     <th scope='col' class='text-center'>Modificar</th>
                     <th scope='col' class='text-center'>Deshabilitar</th>
-                    <!-- <th scope='col' class='text-center'>Eliminar</th> -->
                 </tr>
             </thead>
 

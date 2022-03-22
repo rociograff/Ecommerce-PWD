@@ -3,8 +3,14 @@ include_once '../../configuracion.php';
 $controlAdmin = new control_admin();
 
 $datos = data_submitted();
-if (count($datos) == 0) {
-    $controlAdmin->verificarAdmin("administrarUsuarios");
+$valido = false;
+if (!$valido) {
+    $controlAdmin = new control_admin();
+    $valido = $controlAdmin->verificarAdmin("administrarUsuarios");
+    if (!$valido) {
+        header('Location: ../home/index.php?messageErr=' . urlencode("No tiene los permisos para acceder"));
+        exit;
+    }
 }
 
 $titulo = "Administrar Usuarios";
@@ -20,26 +26,8 @@ include_once '../estructuras/cabecera.php';
 
         <h1 class="text-center">Usuarios en la Base de Datos</h1>
 
-        <?php
-        if (count($datos) > 0) {
-            if (isset($datos['messageOk']) || isset($datos['messageErr'])) {
-                if (isset($datos['messageOk'])) {
-                    $message = $datos['messageOk'];
-                    $alert = "success";
-                } else {
-                    $message = $datos['messageErr'];
-                    $alert = "danger";
-                }
-        ?>
-
-                <div class='alert alert-<?php echo $alert ?> d-flex align-items-center text-center' role='alert'>
-                    <i class="bi bi-exclamation-triangle-fill text-center">&nbsp;<?php echo $message ?></i>
-                </div>
-
-        <?php
-
-            }
-        } ?>
+        <!-- Div para el script -->
+        <div id="mensaje" class='alert d-flex align-items-center text-center col-md-4 offset-md-4' role='alert'></div>
 
         <table class='table mt-3'>
             <thead style="color:white;background: rgb(0,212,255);background: linear-gradient(90deg, rgba(0,212,255,1) 0%, rgba(194,2,160,1) 0%, rgba(139,0,142,1) 100%);">
@@ -65,21 +53,21 @@ include_once '../estructuras/cabecera.php';
                 $rol = $listaUsuarioRol[0]->getObjRol()->getRodescripcion();
             ?>
 
-                <tr>
+                <tr id="row<?php echo $id ?>">
                     <td class='text-center'><?php echo $id ?></td>
                     <td class='text-center'><?php echo strtoupper($rol) ?></td>
                     <td class='text-center'><?php echo $usuario->getUsnombre() ?></td>
                     <td class='text-center'><?php echo md5($usuario->getUspass()) ?></td>
                     <td class='text-center'><?php echo $usuario->getUsmail() ?></td>
-                    <td class='text-center'><?php echo $usuario->getUsdeshabilitado() ?></td>
+                    <td id="fechaDeshabilitado<?php echo $id ?>" class='text-center'><?php echo $usuario->getUsdeshabilitado() ?></td>
                     <form method='post' action='formularioModificacionUsuario.php'>
                         <td class='text-center'>
                             <input name='idusuario' id='idusuario' type='hidden' value=<?php echo $id ?>><button class='btn btn-warning btn-sm' type='submit'><i class='fas fa-user-edit'></i></button>
                         </td>
                     </form>
-                    <form method='post' action='../actions/actionDeshabilitarUsuario.php'>
+                    <form>
                         <td class='text-center'>
-                            <input name='idusuario' id='idusuario' type='hidden' value=<?php echo $id ?>><button class='btn btn-warning btn-sm' type='submit'>
+                            <button type="button" id="deshabilitar<?php echo $id ?>" class='btn btn-warning btn-sm' onclick="deshabilitar('deshabilitar<?php echo $id ?>', '<?php echo $id ?>', '<?php echo $usuario->getUsdeshabilitado() ?>')">
 
                                 <?php
                                 if ($usuario->getUsdeshabilitado() == '0000-00-00 00:00:00') {
@@ -100,9 +88,9 @@ include_once '../estructuras/cabecera.php';
                             </button>
                         </td>
                     </form>
-                    <form method='post' action='../actions/actionEliminarUsuario.php'>
+                    <form action="../actions/actionEliminarUsuario.php">
                         <td class='text-center'>
-                            <input name='idusuario' id='idusuario' type='hidden' value=<?php echo $id ?>><button class='btn btn-danger btn-sm' type='submit'><i class='bi bi-trash'></i></button>
+                            <input name='idusuario' id='idusuario' type='hidden' value=<?php echo $id ?>><button type="submit" class='btn btn-danger btn-sm'><i class='bi bi-trash'></i></button>
                         </td>
                     </form>
                 </tr>
@@ -124,6 +112,39 @@ include_once '../estructuras/cabecera.php';
     ?>
 
 </div>
+
+<script>
+    function deshabilitar(idBoton, idUsuario, usDeshabilitado) {
+        $.ajax({ //Llama la funcion ajax, funcion asincrona
+            data: { //Pasa los parametros por post o get
+                idusuario: idUsuario //Nombre que tiene en la posicion del array en post : valor que tien
+            },
+            url: "../actions/actionDeshabilitarUsuario.php",
+            type: "post", //Metodo por el que pasa los valores
+            success: function(respuesta) { //Atrapa la respuesta del action
+                respuesta = JSON.parse(respuesta); //Lee la respuesta como un json
+                if (respuesta.status == "EXITO") { //Si respuesta en la clave status tiene exito
+                    $('#mensaje').removeClass("alert-danger"); //Saco la clase 
+                    $('#mensaje').addClass("alert-success");
+                    $('#mensaje').html('<i class="bi bi-exclamation-triangle-fill text-center">EXITO</i>'); //Le inserto la linea de html
+                    // console.log(respuesta.status);
+                    //Modifico el boton
+                    if (respuesta.fecha == "0000-00-00 00:00:00") { //Si esta habilitado
+                        $('#' + idBoton).html('<i class="bi bi-toggle-off"></i>') //Le asigno el boton de apagado
+                    } else {
+                        $('#' + idBoton).html('<i class="bi bi-toggle-on"></i>') //Sino le asigno el boton de prendido
+                    }
+                    $('#fechaDeshabilitado' + idUsuario).html(respuesta.fecha) //Siempre agarro el fechaDeshabilitado con su concatenacion del idUsuario y le pasamos la fecha que trae el json
+                } else {
+                    $('#mensaje').removeClass("alert-success"); //Le saca la clase success
+                    $('#mensaje').addClass("alert-danger"); 
+                    $('#mensaje').html('<i class="bi bi-exclamation-triangle-fill text-center">ERROR</i>') //Le inserto el msj de error
+                }
+            }
+        })
+        // console.log(idBoton, idUsuario, usDeshabilitado)
+    }
+</script>
 
 <?php
 include_once '../estructuras/pie.php';

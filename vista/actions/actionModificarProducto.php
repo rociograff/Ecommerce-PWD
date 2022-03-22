@@ -2,18 +2,15 @@
 include_once '../../configuracion.php';
 
 $datos = data_submitted();
-$datosBusqueda['idproducto'] = $datos['idproducto'];
 
-$abmProducto = new abmproducto();
+$controlDeposito = new control_deposito();
+$respuesta = $controlDeposito->modificarProducto($datos);
 
-$lista = $abmProducto->buscar($datosBusqueda);
-
-if (isset($lista)) {
-    $exito = $abmProducto->modificacion($datos);
-    $exito ? header('Location: ../deposito/administrarProductos.php?message=' . urlencode("Producto modificado")) : header('Location: ../deposito/administrarProductos.php?message=' . urlencode("Error en la modificacion"));
-    exit;
+if ($respuesta['messageErr'] != "?messageErr=") {
+    $message = $respuesta['messageErr'];
 } else {
-    $message = "Producto no encontrado en la base de datos";
-    header('Location: ../deposito/administrarProductos.php?message=' . urlencode($message));
-    exit;
+    $message = $respuesta['messageOk'];
 }
+
+header('Location: ../deposito/administrarProductos.php' . $message);
+exit;

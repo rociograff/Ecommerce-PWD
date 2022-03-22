@@ -1,9 +1,14 @@
 <?php
 include_once '../../configuracion.php';
 $datos = data_submitted();
-$controlAdmin = new control_admin();
-if (count($datos) == 0) {
-    $controlAdmin->verificarAdmin("cargarUsuario");
+$valido = false;
+if (!$valido) {
+    $controlAdmin = new control_admin();
+    $valido = $controlAdmin->verificarAdmin("cargarUsuario");
+    if (!$valido) {
+        header('Location: ../home/index.php?messageErr=' . urlencode("No tiene los permisos para acceder"));
+        exit;
+    }
 }
 $titulo = "Cargar Usuario";
 include_once '../estructuras/cabecera.php';
@@ -13,17 +18,17 @@ include_once '../estructuras/cabecera.php';
     <h1 class="text-center">Nuevo Usuario</h1>
     <form id="datosUsuario" class="col-md-11 mt-4" method="post" action="../actions/actionNuevoUsuario.php">
         <div class="row">
-            <div class="col-md-6">                   
+            <div class="col-md-6">
                 <div class="form-floating">
                     <input class="form-control" id="usnombre" name="usnombre" type="text" placeholder="Nombre">
                     <label for="idproducto">Nombre</label>
-                </div>           
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="form-floating">
                     <input class="form-control" id="usmail" name="usmail" type="text" placeholder="Mail">
                     <label for="usmail">Mail</label>
-                </div>            
+                </div>
             </div>
         </div>
         <div class="row">

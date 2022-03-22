@@ -25,6 +25,22 @@ if ($activa) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- JQuery EasyUI -->
+    <!-- <link rel="stylesheet" type="text/css" href="../js/jquery/jquery-easyui-1.6.6/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../js/jquery/jquery-easyui-1.6.6/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="../js/jquery/jquery-easyui-1.6.6/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="../js/jquery/jquery-easyui-1.6.6/demo/demo.css">
+    <script type="text/javascript" src="../js/jquery/jquery-easyui-1.6.6/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery/jquery-easyui-1.6.6/jquery.easyui.min.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!-- <script src="../js/jquery/jquery-3.6.0.slim.min.js"></script> -->
+    <script src="../js/bootstrap/bootstrap.bundle.js"></script>
+    <script src="../js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../js/bootstrap/bootstrapValidator.min.js"></script>
+
     <!-- Bootstrap CSS -->
     <link type="text/css" rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/carrusel.css">
@@ -62,6 +78,9 @@ if ($activa) {
                         $mostrar = true;
                     }
                     if ($activa) {
+                        if ($roles[0] == 1) {
+                            $mostrar = true;
+                        }
                         if ($roles[0] > 1) {
                             if (count($roles) > 1) {
                                 if ($roles[1] == 1) {
@@ -94,10 +113,6 @@ if ($activa) {
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item" href="../cliente/pulseras.php">Pulseras</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="../cliente/relojes.php">Relojes</a></li>
                             </ul>
                         </li>
 
@@ -201,7 +216,7 @@ if ($activa) {
                     if (!$activa) {
                         ?>
 
-                         <!-- Icon visitante -->
+                        <!-- Icon visitante -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown-Visitante" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-sign-in-alt"></i><span class="d-lg-none">Usuario</span></a>
 
@@ -222,7 +237,7 @@ if ($activa) {
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown-Usuario">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;<?php echo $sesion->getUsnombre() ?>
+                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="fas fa-user fa-fw" aria-hidden="true" title="Perfil"></span>&nbsp;<?php echo $sesion->getUsnombre() ?>
                                 <a class="dropdown-item" href="../login/configuracion.php"><span class="fas fa-cog fa-fw " aria-hidden="true" title="Configuración"></span>&nbsp;Configuración</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item logout" href="../actions/actionLogout.php"><span class="fas fa-sign-out-alt fa-fw" aria-hidden="true" title="Cerrar sesión"></span>&nbsp;Cerrar sesión</a>
